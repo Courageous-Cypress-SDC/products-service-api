@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const LineTransform = require('./LineTransform');
+// const LineTransform = require('./LineTransform');
+const ProductTransform = require('./ProductTransform.js');
 
 // parses for number if number field
 const parseForNum = (anything) => anything ? JSON.stringify(anything).replace(/\D/g, '') : 0;
@@ -76,67 +77,12 @@ const transformers = {
     let filename = path.join(__dirname, file);
     let readStream =  fs.createReadStream(filename, 'UTF8');
     let productWriteStream = fs.createWriteStream('./productClean.csv', 'UTF8');
-    const lineTransform = new LineTransform();
-
+    const productTransform = new ProductTransform();
 
     readStream
-      .pipe(lineTransform)
+      .pipe(productTransform)
       .pipe(productWriteStream)
-    // start stream chunks, split on new lines
-  //   readStream.on('data', chunk => {
-  //     let chunkSplit = chunk.split('\n').slice(1);
-  //     readStream.pause();
-  //     leftover.length ? console.log(leftover) : null;
-  //     let transformedArray = leftover.concat(transformProducts(chunkSplit));
-  //     if (transformedArray[transformedArray.length - 1].length < 6) {
-  //       // console.log(transformedArray[transformedArray.length - 1])
-  //       leftover = transformedArray[transformedArray.length - 1];
-  //     } else {
-  //       leftover = [];
-  //     }
-  //     console.log(transformedArray)
-  //     let streamArray = transformedArray.join('');
-  //     productWriteStream.write(streamArray);
-  //     readStream.resume();
-  //   })
-
-  //   productWriteStream.on('finish', () => {
-  //     console.log(`wrote all the array data to file`);
-  //  });
-
   }
 }
 
 transformers.productsTransform('product.csv');
-
-// const transformers = {
-
-//   productsTransform: (file) => {
-//     let filename = path.join(__dirname, file);
-//     let readStream =  fs.createReadStream(filename, 'UTF8');
-//     let productWriteStream = fs.createWriteStream('./productsClean.csv', 'UTF8');
-//     let leftover = [];
-//     // start stream chunks, split on new lines
-//     readStream.on('data', chunk => {
-//       let chunkSplit = chunk.split('\n').slice(1);
-//       readStream.pause();
-//       leftover.length ? console.log(leftover) : null;
-//       let transformedArray = leftover.concat(transformProducts(chunkSplit));
-//       if (transformedArray[transformedArray.length - 1].length < 6) {
-//         // console.log(transformedArray[transformedArray.length - 1])
-//         leftover = transformedArray[transformedArray.length - 1];
-//       } else {
-//         leftover = [];
-//       }
-//       console.log(transformedArray)
-//       let streamArray = transformedArray.join('');
-//       productWriteStream.write(streamArray);
-//       readStream.resume();
-//     })
-
-//     productWriteStream.on('finish', () => {
-//       console.log(`wrote all the array data to file`);
-//    });
-
-//   }
-// }

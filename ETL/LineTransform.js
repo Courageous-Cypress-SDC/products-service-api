@@ -4,23 +4,23 @@ class LineTransform extends stream.Transform {
   constructor(options) {
       options = options || {};
       super(options);
-
       this.separator = options.separator || '[\r\n|\n|\r]+';
       this.chunkRegEx = new RegExp(this.separator);
       this.remnantRegEx = new RegExp(this.separator + '$');
       this.headerFlag = false;
-
       this.remnant = '';
   }
-
+  // check for a number if embedded in string, return only the number
   parseForNum(anything){
     return anything ? JSON.stringify(anything).replace(/\D/g, '') : 0;
   }
 
+  //remove column name; ex 'default_price:'
   colRemove(anything, column) {
     return anything.replace(new RegExp(`${column}:`), '');
   }
 
+  // check if the field is only an integer; if not return 0
   validNum(data, targetType){
     if (isNaN(data)) {
       return [this.parseForNum(data)];
@@ -29,6 +29,7 @@ class LineTransform extends stream.Transform {
     }
   };
 
+  // check if filed is null; if null assign an empty string
   nullCheckOk(data, returnIfNull, colName){
     if (!data) {
       return [' '];
@@ -37,6 +38,7 @@ class LineTransform extends stream.Transform {
     };
   }
 
+  // check to see if the field conforms to varchar rules, if not, makes it conform to varchar rules
   validVarchar(data, maxLength, columnName, handleError){
     if (!data) {
       return handleError;
@@ -45,36 +47,7 @@ class LineTransform extends stream.Transform {
     }
   }
 
-  transformProducts(line){
-      // line = line.toString();
-      let data = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-      let reformatted = [];
-      let incomplete;
-      if (data.length !== 6) {
-        incomplete = line;
-      } else {
-        // skip id if no id
-        reformatted.push(this.validNum(data[0], 'number'));
-        if (!reformatted) {
-          // console.log('hell')
-          return null;
-        }
-        // // conform name length or no length
-        reformatted.push(this.validVarchar(data[1], 255, 'name', 'Product Name'));
-        // // conform slogan length or no length
-        reformatted.push(this.validVarchar(data[2], 255, 'slogan', 'Product Slogan'));
-        // // conform product description (can be null)
-        reformatted.push(this.nullCheckOk(data[3], '', 'description'));
-        // // confrom category length or no length
-        reformatted.push(this.validVarchar(data[4], 30, 'category', 'Misc'));
-        // // conform default price
-        reformatted.push(this.validNum(data[5], 'number'));
-
-        return reformatted + '\n';
-      }
-      return incomplete;
-    }
-
+  // handles chunk data line by line
   _transform(chunk, encoding, callback) {
     // Convert buffer to a string for splitting
     if (Buffer.isBuffer(chunk)) {
@@ -97,7 +70,7 @@ class LineTransform extends stream.Transform {
     // Push each line
     lines.slice(startPoint).forEach(line => {
       if (line !== '') {
-        this.push(this.transformProducts(line))
+        this.push(line)
       }
       this.headerFlag = true;
     }, this);
@@ -111,7 +84,6 @@ class LineTransform extends stream.Transform {
           this.push(this.remnant);
           this.remnant = '';
       }
-
       return setImmediate(callback);
   }
 }
