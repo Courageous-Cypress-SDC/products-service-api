@@ -1,17 +1,15 @@
-// import stream from 'stream';
-const stream = require('stream');
 const LineTransform = require('./LineTransform.js');
 
-class ProductTransform extends LineTransform {
+class SkusTransform extends LineTransform {
   constructor(options) {
       options = options || {};
       super(options);
       this.headerFlag = false;
       this.remnant = '';
-      this.numberOfFields = 6;
+      this.numberOfFields = 4;
   }
-
-  transformProducts(line){
+  // [ id, style_id, size, quantity]
+  transformSkus(line){
       let data = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
       let reformatted = [];
       let incomplete;
@@ -19,20 +17,17 @@ class ProductTransform extends LineTransform {
         incomplete = line;
       } else {
         // skip id if no id
-        reformatted.push(this.validNum(data[0], 'number'));
+        reformatted.push(this.validNum(data[0]));
         if (!reformatted) {
           return null;
         }
-        // // conform name length or no length
-        reformatted.push(this.validVarchar(data[1], 255, 'name', 'Product Name'));
-        // // conform slogan length or no length
-        reformatted.push(this.validVarchar(data[2], 255, 'slogan', 'Product Slogan'));
-        // // conform product description (can be null)
-        reformatted.push(this.nullCheckOk(data[3], ' ', 'description'));
-        // // confrom category length or no length
-        reformatted.push(this.validVarchar(data[4], 30, 'category', 'Misc'));
-        // // conform default price
-        reformatted.push(this.validNum(data[5], 'number'));
+        // conform style id
+        reformatted.push(this.validNum(data[1]));
+        // confrom size
+        reformatted.push(this.validVarchar(data[2], 7, 'size', null));
+        // conform quanitity
+        reformatted.push(this.validNum(data[3]));
+
         return reformatted + '\n';
       }
       return incomplete;
@@ -57,7 +52,7 @@ class ProductTransform extends LineTransform {
     let startPoint = this.headerFlag ? 0 : 1;
     lines.slice(startPoint).forEach(line => {
       if (line !== '') {
-        this.push(this.transformProducts(line))
+        this.push(this.transformSkus(line))
       }
       this.headerFlag = true;
     }, this);
@@ -74,4 +69,4 @@ class ProductTransform extends LineTransform {
   }
 }
 
-module.exports = ProductTransform;
+module.exports = SkusTransform;

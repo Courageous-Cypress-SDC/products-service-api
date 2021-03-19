@@ -21,9 +21,9 @@ class LineTransform extends stream.Transform {
   }
 
   // check if the field is only an integer; if not return 0
-  validNum(data, targetType){
+  validNum(data){
     if (isNaN(data)) {
-      return [this.parseForNum(data)];
+      return this.parseForNum(data);
     } else {
       return data;
     }
@@ -32,9 +32,9 @@ class LineTransform extends stream.Transform {
   // check if filed is null; if null assign an empty string
   nullCheckOk(data, returnIfNull, colName){
     if (!data) {
-      return [' '];
+      return returnIfNull;
     } else {
-      return [this.colRemove(data, colName)];
+      return this.colRemove(data, colName);
     };
   }
 
@@ -43,7 +43,9 @@ class LineTransform extends stream.Transform {
     if (!data) {
       return handleError;
     } else {
-      return data.length < maxLength ? this.colRemove(data, columnName) : this.colRemove(data.slice(0, maxLength - 1), columnName) ;
+      return data.length < maxLength
+        ? this.colRemove(data, columnName)
+        : this.colRemove(data.slice(0, maxLength - 1), columnName);
     }
   }
 

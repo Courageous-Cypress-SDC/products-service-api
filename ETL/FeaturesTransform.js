@@ -1,17 +1,15 @@
-// import stream from 'stream';
-const stream = require('stream');
 const LineTransform = require('./LineTransform.js');
 
-class ProductTransform extends LineTransform {
+class FeatureTransform extends LineTransform {
   constructor(options) {
       options = options || {};
       super(options);
-      this.headerFlag = false;
+      this.headerFlag = true;
       this.remnant = '';
-      this.numberOfFields = 6;
+      this.numberOfFields = 4;
   }
-
-  transformProducts(line){
+  // [ id, product_id, feature, value ]
+  transformFeatures(line){
       let data = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
       let reformatted = [];
       let incomplete;
@@ -19,20 +17,17 @@ class ProductTransform extends LineTransform {
         incomplete = line;
       } else {
         // skip id if no id
-        reformatted.push(this.validNum(data[0], 'number'));
+        reformatted.push(this.validNum(data[0]));
         if (!reformatted) {
           return null;
         }
-        // // conform name length or no length
-        reformatted.push(this.validVarchar(data[1], 255, 'name', 'Product Name'));
-        // // conform slogan length or no length
-        reformatted.push(this.validVarchar(data[2], 255, 'slogan', 'Product Slogan'));
-        // // conform product description (can be null)
-        reformatted.push(this.nullCheckOk(data[3], ' ', 'description'));
-        // // confrom category length or no length
-        reformatted.push(this.validVarchar(data[4], 30, 'category', 'Misc'));
-        // // conform default price
-        reformatted.push(this.validNum(data[5], 'number'));
+        // conform product id, else 0
+        reformatted.push(this.validNum(data[1], 'product_id'));
+        // conform feature
+        reformatted.push(this.validVarchar(data[2], 50, 'feature', null));
+        // conform feature value
+        reformatted.push(this.validVarchar(data[3], 50, 'value', null));
+
         return reformatted + '\n';
       }
       return incomplete;
@@ -57,7 +52,7 @@ class ProductTransform extends LineTransform {
     let startPoint = this.headerFlag ? 0 : 1;
     lines.slice(startPoint).forEach(line => {
       if (line !== '') {
-        this.push(this.transformProducts(line))
+        this.push(this.transformFeatures(line))
       }
       this.headerFlag = true;
     }, this);
@@ -74,4 +69,4 @@ class ProductTransform extends LineTransform {
   }
 }
 
-module.exports = ProductTransform;
+module.exports = FeatureTransform;
