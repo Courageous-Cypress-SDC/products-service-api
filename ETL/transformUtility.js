@@ -12,12 +12,12 @@ const dirtyToCleanCSV = (file, newFileName, transformClass) => {
   let writeStream = fs.createWriteStream(newFileName, 'UTF8');
   let transformClassInit = new transformClass();
   readStream
-      .pipe(transformClassInit)
-      .pipe(writeStream)
+    .pipe(transformClassInit)
+    .pipe(writeStream)
 }
 
-dirtyToCleanCSV('product.csv', 'productClean.csv', ProductTransform);
-dirtyToCleanCSV('photos.csv', 'photosClean.csv', PhotosTransform);
-dirtyToCleanCSV('features.csv', 'featuresClean.csv', FeaturesTransform);
-dirtyToCleanCSV('skus.csv', 'skusClean.csv', SkusTransform);
-dirtyToCleanCSV('styles.csv', 'stylesClean.csv', StylesTransform);
+// dirtyToCleanCSV('product.csv', 'productClean.csv', ProductTransform);
+// dirtyToCleanCSV('photos.csv', 'photosClean.csv', PhotosTransform);
+// dirtyToCleanCSV('features.csv', 'featuresClean.csv', FeaturesTransform);
+// dirtyToCleanCSV('skus.csv', 'skusClean.csv', SkusTransform);
+// dirtyToCleanCSV('styles.csv', 'stylesClean.csv', StylesTransform);

@@ -13,6 +13,12 @@ class PhotosTransform extends LineTransform {
     let data = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
     let reformatted = [];
     let incomplete;
+
+    if (data.length === 1) {
+      data = data[0] + '"';
+      data = data.split(',');
+    }
+
     if (data.length !== this.numberOfFields) {
       incomplete = line;
     } else {
@@ -27,9 +33,10 @@ class PhotosTransform extends LineTransform {
       reformatted.push(this.nullCheckOk(data[2], 'http://rthotel.com/wp/wp-content/uploads/2015/04/default_image_01.png', 'url'));
       // check thumbnail url for url, else null ok
       reformatted.push(this.nullCheckOk(data[3], 'http://rthotel.com/wp/wp-content/uploads/2015/04/default_image_01.png', 'thumbnail_url'));
+
       return reformatted + '\n';
     }
-      return incomplete;
+    return incomplete;
     }
 
   _transform(chunk, encoding, callback) {

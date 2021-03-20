@@ -81,7 +81,7 @@ class LineTransform extends stream.Transform {
   }
 
   _flush(callback) {
-      // Do we have a remnant?
+      // if remnant?
       if (this.remnant.length > 0) {
           this.push(this.remnant);
           this.remnant = '';

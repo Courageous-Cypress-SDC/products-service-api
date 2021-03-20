@@ -29,10 +29,10 @@ class StylesTransform extends LineTransform {
         reformatted.push(this.validVarchar(data[2], 100, 'name', 'Stylish'));
 
         // conform sale price
-        reformatted.push(data[3] ? this.validNum(data[3]) : null);
+        reformatted.push(this.validNum(data[3]));
 
         // conform original price
-        reformatted.push(data[4] ? this.validNum(data[4]) : null);
+        reformatted.push(this.validNum(data[4]));
 
         // conform default
         reformatted.push(data[5] === 1 || data[5] === '1' ? 1 : 0);

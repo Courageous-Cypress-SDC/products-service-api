@@ -24,7 +24,7 @@ class SkusTransform extends LineTransform {
         // conform style id
         reformatted.push(this.validNum(data[1]));
         // confrom size
-        reformatted.push(this.validVarchar(data[2], 7, 'size', null));
+        reformatted.push(this.validVarchar(data[2], 15, 'size', null));
         // conform quanitity
         reformatted.push(this.validNum(data[3]));
 

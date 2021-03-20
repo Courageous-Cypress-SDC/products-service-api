@@ -24,9 +24,9 @@ class FeatureTransform extends LineTransform {
         // conform product id, else 0
         reformatted.push(this.validNum(data[1], 'product_id'));
         // conform feature
-        reformatted.push(this.validVarchar(data[2], 50, 'feature', null));
+        reformatted.push(this.validVarchar(data[2], 50, 'feature', 'null'));
         // conform feature value
-        reformatted.push(this.validVarchar(data[3], 50, 'value', null));
+        reformatted.push(this.validVarchar(data[3], 50, 'value', 'null'));
 
         return reformatted + '\n';
       }
