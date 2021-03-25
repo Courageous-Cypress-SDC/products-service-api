@@ -1,0 +1,13 @@
+db/connection.js
+ETL/features.csv
+ETL/photos.csv
+ETL/product.csv
+ETL/skus.csv
+ETL/styles.csv
+ETL/featuresClean.csv
+ETL/photosClean.csv
+ETL/productClean.csv
+ETL/skusClean.csv
+ETL/stylesClean.csv
+.DS_Store
+db/sql_pad.txt

@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  app:
+    container_name: docker-productservice
+    restart: always
+    build: .
+    ports:
+      - '3005:3005'
