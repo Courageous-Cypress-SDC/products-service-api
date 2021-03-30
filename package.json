@@ -4,7 +4,7 @@
   "description": "API service for Products Detail section",
   "main": "index.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "nodemon server/server.js"
   },
   "repository": {
     "type": "git",

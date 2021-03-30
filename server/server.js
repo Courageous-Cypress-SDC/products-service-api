@@ -15,6 +15,8 @@ app.get('/productid', (req,res) => {
   });
 });
 
+
+
 app.get('/styles', (req,res) => {
   pgQuery.getStyles(req.query[0], (err, result) => {
     if (err) console.log(err);

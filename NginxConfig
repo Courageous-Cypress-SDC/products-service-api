@@ -1,0 +1,13 @@
+upstream product_load_balance {
+    least_conn;
+    server ##.compute.amazonaws.com:3005;
+    server ##.compute.amazonaws.com:3005;
+}
+
+server {
+  listen 82;
+
+  location / {
+     proxy_pass http://product_load_balance;
+  }
+}
