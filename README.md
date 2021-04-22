@@ -18,7 +18,7 @@ In the db folder, the connection example file must be configured to create a con
 
 ## NGINX - Load Balancer
 
-This service utilizes a load balancer in a least connections to increase the RPS. 
+This service utilizes a load balancer in a least connections configuration to increase throughput. 
 
 
 ## Load Testing
